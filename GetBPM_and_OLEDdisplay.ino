@@ -17,17 +17,21 @@ int LowerThreshold = 490;
 int reading = 0;
 float BPM = 0.0;
 bool IgnoreReading = false;
-bool FirstPulseDetected = false;
-unsigned long FirstPulseTime = 0;
-unsigned long SecondPulseTime = 0;
-unsigned long PulseInterval = 0;
+
 const unsigned long delayTime = 10;
+
 const unsigned long delayTime2 = 1000;
-const unsigned long delayTime3 = 1000; // for swap heart logo
+
+const unsigned long delayTime3[4] = { 500,800,1100,2000 }; // for swap heart logo
+int dealyTime3_length = 4;
+
 const unsigned long baudRate = 9600;
+
 unsigned long previousMillis = 0;
 unsigned long previousMillis2 = 0;
 unsigned long previousMillis3 = 0; // for swap heart logot
+
+long rand_index; // for swap heart logo
 
 int count_index = 0;
 double heart_rates[4], BPM_avg;
@@ -136,6 +140,7 @@ void getWarning_OLED()
   OLED.println("not detected");
 
 }
+
 void setup() {
   pinMode(A5, INPUT);
   Serial.begin(baudRate);
@@ -151,12 +156,18 @@ void setup() {
   Serial.print("F");
   delay(500);
 
+  // for swap heart logo
+  randomSeed(analogRead(A1));
+  rand_index = random(dealyTime3_length);
+  Serial.print("test first_randomNumber : "); 
+  Serial.println(rand_index);
 }
 
 void loop() {
 
   OLED.clearDisplay(); // ลบภาพในหน้าจอทั้งหมด
-
+  
+  rand_index = random(dealyTime3_length); //random number for index , in order to swap bitmap picture
 
   // Get current time
   unsigned long currentMillis = millis();
@@ -208,8 +219,7 @@ void loop() {
           OLED.drawBitmap(15, 25, logo_Heart_24X21, 24, 21, WHITE);
         }
       //use timer3 to swap bitmap picture (once time pass 1500 ms and a finger is detected)
-
-      if (myTimer3(delayTime3, currentMillis) == 1) {
+      if (myTimer3(delayTime3[rand_index], currentMillis) == 1) {
 
         if (active_largerHeart)
         {
@@ -218,6 +228,8 @@ void loop() {
           //draw larger heart
           OLED.drawBitmap(12, 22, logo_Heart_32X32, 32, 32, WHITE);
         }
+
+        rand_index = random(dealyTime3_length); //random number for index , in order to swap bitmap picture        
       }
     }
   }
