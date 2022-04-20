@@ -197,32 +197,31 @@ void loop() {
       // Display BPM in OLED
       getBPM_OLED(BPM_avg);
 
+       // Draw BPM Heart-bitmap picture section
+        //display.drawBitmap(Starting x pos, Starting y pos, Bitmap name, Width, Height, Color);
+        if (active_smallerHeart)
+        {
+          active_smallerHeart = !(active_smallerHeart);
+          active_largerHeart = !(active_largerHeart);
+
+          //draw smaller heart
+          OLED.drawBitmap(15, 25, logo_Heart_24X21, 24, 21, WHITE);
+        }
+      //use timer3 to swap bitmap picture (once time pass 1500 ms and a finger is detected)
+
+      if (myTimer3(delayTime3, currentMillis) == 1) {
+
+        if (active_largerHeart)
+        {
+          active_smallerHeart = !(active_smallerHeart);
+          active_largerHeart = !(active_largerHeart);
+          //draw larger heart
+          OLED.drawBitmap(12, 22, logo_Heart_32X32, 32, 32, WHITE);
+        }
+      }
     }
   }
 
-  //use timer3 to swap bitmap picture (once time pass 1500 ms and a finger is detected)
-
-  if (myTimer3(delayTime3, currentMillis) == 1 && reading > UpperThreshold) {
-    // Draw BPM Heart-bitmap picture section
-    //display.drawBitmap(Starting x pos, Starting y pos, Bitmap name, Width, Height, Color);
-    if (active_smallerHeart)
-    {
-      active_smallerHeart = !(active_smallerHeart);
-      active_largerHeart = !(active_largerHeart);
-
-      //draw smaller heart
-      OLED.drawBitmap(15, 25, logo_Heart_24X21, 24, 21, WHITE);
-   
-    }
-    else if (active_largerHeart)
-    {
-      active_smallerHeart = !(active_smallerHeart);
-      active_largerHeart = !(active_largerHeart);
-      //draw larger heart
-      OLED.drawBitmap(12, 22, logo_Heart_32X32, 32, 32, WHITE);
-     
-    }
-  }
 
   // Second event display section (in serial monitor)
   if (myTimer2(delayTime2, currentMillis) == 1 ) {
