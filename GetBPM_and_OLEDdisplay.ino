@@ -5,7 +5,7 @@
 #include <Adafruit_SSD1306.h>
 
 //for buzzer
-#define buzzer 2
+#define buzzer 11
 
 //for note Nokia Tune
 #define NOTE_B0  31
